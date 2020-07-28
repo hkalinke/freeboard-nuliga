@@ -42,9 +42,26 @@
         const fetchData = () => {
             // TODO: data from nu
             const newData = { hello : "world! it's " + new Date().toLocaleTimeString() };
+            const authData = accessTokenRequest();
 
             // commit data to frontend
             updateCallback(newData);
+        };
+
+        const accessTokenRequest = async () => {
+           const url = "https://hbde-portal.liga.nu/rs/auth/token";
+
+           const options = {
+               method: "POST",
+               body: "grant_type=client_credentials&client_id=" + currentSettings.client_id +
+                   "&client_secret=" + currentSettings.client_secret + "&scope=nuPortalRS_club",
+               headers: {
+                   'Content-Type': 'application/x-www-form-urlencoded'
+               }
+           };
+
+           return await fetch(url, options)
+               .then(resp => resp.json());
         };
 
         // define a refresh timer to fetch new data in a defined interval
